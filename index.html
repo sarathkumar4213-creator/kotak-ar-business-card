@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Sarath Kumar | AR Business Card</title>
+  <meta name="theme-color" content="#a90012" />
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  <style>
+    *{box-sizing:border-box} body{margin:0;background:#13080b;color:#fff;font-family:Arial,sans-serif}
+    .intro{position:fixed;z-index:5;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:26px;background:radial-gradient(circle at 50% 35%,#6b101b,#17070b 68%)}
+    .intro h1{margin:12px 0 6px;font-size:26px}.intro p{max-width:360px;color:#f3cdd1;line-height:1.5}
+    .btn{border:0;border-radius:999px;padding:14px 22px;background:#e51b32;color:#fff;font-weight:700;font-size:16px;margin:7px;box-shadow:0 0 22px #e51b3270}
+    .small{font-size:12px;color:#e5b9bf;max-width:360px}.actions{position:fixed;z-index:4;bottom:18px;left:0;right:0;display:none;justify-content:center;gap:10px;flex-wrap:wrap;padding:0 12px}
+    .actions a{background:#a90012;color:white;text-decoration:none;padding:12px 16px;border:1px solid #ff6878;border-radius:12px;font-weight:bold;box-shadow:0 0 16px #ff203b55}
+    #status{font-size:13px;color:#ffd9de;margin-top:10px}
+  </style>
+</head>
+<body>
+  <div class="intro" id="intro">
+    <div style="font-size:13px;letter-spacing:3px;color:#ff7b89">PERSONAL AR BUSINESS CARD</div>
+    <h1>SARATH KUMAR</h1><div style="color:#ffc4cb">RELATIONSHIP MANAGER</div>
+    <p>Tap below, allow camera access, then point your phone at either page of the printed performance sheet.</p>
+    <button class="btn" id="start">START AR EXPERIENCE</button>
+    <div class="small">For best results, use a well-lit area and keep the full page in view. Camera access requires HTTPS.</div>
+    <div id="status">AR target file is required before the camera experience can run.</div>
+  </div>
+  <a-scene id="ar-scene" mindar-image="imageTargetSrc: ./kotak-performance.mind; autoStart: false; uiLoading: no; uiScanning: no;" embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false" style="display:none">
+    <a-assets>
+      <img id="portrait" src="./sarath-photo.jpg" />
+    </a-assets>
+    <!-- Page 1 target -->
+    <a-entity mindar-image-target="targetIndex: 0">
+      <a-entity position="0 0 0.18">
+        <a-plane width="1.28" height="1.02" material="color: #430812; opacity: .92; transparent: true; shader: flat" position="0 0 0"></a-plane>
+        <a-plane src="#portrait" width="0.48" height="0.64" position="-0.34 0.12 0.012"></a-plane>
+        <a-text value="SARATH KUMAR" color="#ffffff" align="left" width="1.55" position="-0.06 0.34 0.02"></a-text>
+        <a-text value="RELATIONSHIP MANAGER" color="#ff9aa5" align="left" width="1.35" position="-0.06 0.12 0.02"></a-text>
+        <a-text value="7305984213" color="#ffffff" align="left" width="1.45" position="-0.06 -0.12 0.02"></a-text>
+        <a-ring color="#ff334d" radius-inner="0.69" radius-outer="0.71" position="0 0 0.005" animation="property: rotation; to: 0 0 360; loop: true; dur: 9000"></a-ring>
+      </a-entity>
+    </a-entity>
+    <!-- Page 2 target -->
+    <a-entity mindar-image-target="targetIndex: 1">
+      <a-entity position="0 0 0.18">
+        <a-plane width="1.28" height="1.02" material="color: #430812; opacity: .92; transparent: true; shader: flat" position="0 0 0"></a-plane>
+        <a-plane src="#portrait" width="0.48" height="0.64" position="-0.34 0.12 0.012"></a-plane>
+        <a-text value="SARATH KUMAR" color="#ffffff" align="left" width="1.55" position="-0.06 0.34 0.02"></a-text>
+        <a-text value="RELATIONSHIP MANAGER" color="#ff9aa5" align="left" width="1.35" position="-0.06 0.12 0.02"></a-text>
+        <a-text value="7305984213" color="#ffffff" align="left" width="1.45" position="-0.06 -0.12 0.02"></a-text>
+        <a-ring color="#ff334d" radius-inner="0.69" radius-outer="0.71" position="0 0 0.005" animation="property: rotation; to: 0 0 360; loop: true; dur: 9000"></a-ring>
+      </a-entity>
+    </a-entity>
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+  </a-scene>
+  <div class="actions" id="actions">
+    <a href="tel:+917305984213">CALL</a>
+    <a href="https://wa.me/917305984213" target="_blank" rel="noopener">WHATSAPP</a>
+    <a href="./sarath-kumar.vcf" download>SAVE CONTACT</a>
+  </div>
+  <script>
+    const startBtn=document.getElementById('start'), intro=document.getElementById('intro'), scene=document.getElementById('ar-scene'), statusEl=document.getElementById('status'), actions=document.getElementById('actions');
+    startBtn.addEventListener('click', async()=>{
+      try { intro.style.display='none'; scene.style.display='block'; const ar=scene.systems['mindar-image-system']; await ar.start(); }
+      catch(e){ intro.style.display='flex'; scene.style.display='none'; statusEl.textContent='Could not start camera. Check browser permission and HTTPS, then try again.'; }
+    });
+    scene.addEventListener('targetFound',()=>actions.style.display='flex');
+    scene.addEventListener('targetLost',()=>actions.style.display='none');
+  </script>
+</body>
+</html>
